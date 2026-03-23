@@ -872,4 +872,4 @@ export default function App() {
     </div>
   );
 }
-export default AirdropEstimator;
+export default App;
