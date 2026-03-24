@@ -10,7 +10,6 @@ const TODAY = new Date();
 TODAY.setHours(0,0,0,0);
 
 // ─── TGE DAY OFFSETS ─────────────────────────────────────────────────────────
-// ─── TGE DAY OFFSETS ─────────────────────────────────────────────────────────
 const SOLSTICE_TGE_DAYS = [7, 14, 21, 30];
 
 const ONRE_TARGETS = [
@@ -414,7 +413,7 @@ export default function App() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
           {/* LEFT COLUMN - your original */}
-          <div className={`rounded-2xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent p-4 flex flex-col gap-3`}>
+          <div className={`lg:col-span-5 rounded-2xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent p-4 flex flex-col gap-3`}>
 
             {/* Stats row */}
             <div className="grid grid-cols-2 gap-2">
@@ -630,7 +629,7 @@ export default function App() {
           <div className="lg:col-span-7 space-y-4">
 
             {/* Tabs */}
-            <div className="flex border-b border-white/10 text-sm font-medium">
+            <div className="flex border-b border-white/10 text-sm font-medium overflow-x-auto">
               {[
                 { id: "overview", label: "Overview" },
                 { id: "fdv-tge", label: "FDV × TGE" },
@@ -640,7 +639,7 @@ export default function App() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveMatrixTab(tab.id)}
-                  className={`flex-1 py-3 border-b-2 transition-all ${
+                  className={`flex-1 py-3 border-b-2 transition-all whitespace-nowrap px-4 ${
                     activeMatrixTab === tab.id ? "border-blue-400 text-white" : "border-transparent text-gray-400 hover:text-white"
                   }`}
                 >
@@ -650,7 +649,7 @@ export default function App() {
             </div>
 
             {/* Tab Content */}
-            <div className="bg-white/4 border border-white/10 rounded-2xl overflow-hidden min-h-[460px]">
+            <div className="bg-white/4 border border-white/10 rounded-2xl overflow-hidden min-h-[420px]">
               {activeMatrixTab === "overview" && (
                 <div className="p-6">
                   <h3 className="text-lg font-bold mb-4">Quick Snapshot</h3>
@@ -699,8 +698,8 @@ export default function App() {
               )}
 
               {activeMatrixTab === "per-million" && (
-                <div className="p-4">
-                  <p className="text-gray-400 text-center py-12">Value per 1M table can be added here if you want.</p>
+                <div className="p-6 text-center text-gray-400">
+                  Value per 1M {proto.pointsLabel} table can be added here.
                 </div>
               )}
             </div>
