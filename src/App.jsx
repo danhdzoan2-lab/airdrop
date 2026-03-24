@@ -141,6 +141,30 @@ const PROTOCOLS = {
 };
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
+
+// Storage abstraction — works in Claude artifacts (window.storage) and Vercel (localStorage)
+const storage = {
+  async get(key) {
+    try {
+      if (window.storage?.get) {
+        const r = await window.storage.get(key);
+        return r?.value ?? null;
+      }
+    } catch(e) {}
+    try { return localStorage.getItem(key); } catch(e) {}
+    return null;
+  },
+  async set(key, value) {
+    try {
+      if (window.storage?.set) {
+        await window.storage.set(key, value);
+        return;
+      }
+    } catch(e) {}
+    try { localStorage.setItem(key, value); } catch(e) {}
+  },
+};
+
 const MONTHS_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
 function fmtDateShort(d) { return `${MONTHS_SHORT[d.getMonth()]} ${d.getDate()}`; }
@@ -201,9 +225,9 @@ export default function App() {
   useEffect(() => {
     const load = async () => {
       try {
-        const result = await window.storage.get("airdrop-estimator-defaults");
-        if (result && result.value) {
-          const parsed = JSON.parse(result.value);
+        const raw = await storage.get("airdrop-estimator-defaults");
+        if (raw) {
+          const parsed = JSON.parse(raw);
           const todayMs = new Date().setHours(0,0,0,0);
           // For each protocol, auto-accrue points based on days elapsed since savedAt
           const accrue = (proto, data) => {
@@ -230,7 +254,7 @@ export default function App() {
           setSavedDefaults(merged);
           setAppliedPoints(merged);
           // Persist the accrued values back so next load starts fresh from today
-          try { await window.storage.set("airdrop-estimator-defaults", JSON.stringify(merged)); } catch(e) {}
+          try { await storage.set("airdrop-estimator-defaults", JSON.stringify(merged)); } catch(e) {}
         }
       } catch (e) {
         // Key not found or parse error — use hardcoded defaults
@@ -310,7 +334,7 @@ export default function App() {
     setSavedDefaults(updatedSaved);
     setAppliedPoints(prev => ({ ...prev, [activeProtocol]: newDefaults }));
     setManualPoints(prev => ({ ...prev, [activeProtocol]: { myPoints: "", totalPoints: "", myDaily: "", totalDaily: "" } }));
-    try { await window.storage.set("airdrop-estimator-defaults", JSON.stringify(updatedSaved)); } catch(e) {
+    try { await storage.set("airdrop-estimator-defaults", JSON.stringify(updatedSaved)); } catch(e) {
       console.error("Failed to save defaults:", e);
     }
   };
