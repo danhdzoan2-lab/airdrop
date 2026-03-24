@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 const LOGOS = {
   solstice: "data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAGQAZADASIAAhEBAxEB/8QAHQABAAICAwEBAAAAAAAAAAAAAAgJBgcDBAUCAf/EAEkQAAIBAwIDBQQGBggEBQUAAAABAgMEBQYRBxIhCDFBUWETFCJxCRUWMkKBUmJygoORFyNDkpOhosEzsbLCJCVTc6MmNFTD0f/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCGQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB7Wj9Kak1flo4rTGEvsteS6unbUnPlX6Un3Rj6tpAeKCXPC/sW5e8jSveIefhjKT2csfjdqtfbylVfwRf7KmvUk1w94I8L9CqnUwOkrF3kO69u4+8V9/NTnvy/u7ICuTRXCLiXrKMKmndF5e7oT+5cTo+xoS+VSpywf8zcel+xfxHyChUzmawOFpy+9BVJ3FaP5Riof6yfoAiXguxBpmio/Xmucve+fudpTtv8AqdQyyw7HXCC2ilWeorx+da/iv+iESRAA0ZT7J/BKMdpadvaj85ZOvv8A5SR81uybwTmto6fv6X7OTr/7yZvUARzyHY34R3KfsLjUtk33exvoPb+/TkYdnuw/h6kZSwWvr+2l+GN7YwrJ+jlCUNvnsS9AFe2q+xxxUxcZVMNcYPPwX3YULp0ar/KqoxX9401rThzrvRkpLVGk8ti6cXt7arby9i36VFvB/ky24/JxjOEoTipRktpRa3TXkBTQCYv0gWC4baaxWHp4fS2MsdU5S4lVlcWkPY8tvBfG5Qg1FuUpRSbTfSRDoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB2cXj77K5GhjsZZ3F7eXE1Cjb29N1KlST7lGK6tmc8E+EOruK+d9xwFr7GwoySvclXi1Qtl6v8U9u6C6v0W7VhnBDgrozhRjFDC2nveWqQ5brK3MU69XzUf/AE4fqx9N231AjhwP7HV3eRt8zxRu52dB7TjhrSovayXlVqrpD1jDd9fvRZMDR+ldOaPw9PEaYw1nibGH9lbU1Hmf6Un3yl6tt+p7IAAAAAAAAAAAAAAAbSTbaSXe2DTHbJ1/9g+CmRVrX9nlc3vjbPZ/FHnT9rNeK5afNs/CTiBBrtN6+fEbjHmc7RrOpjaE/csb16e70m1GS/afNP8AfNZg+oRlOcYQi5Sk9kkt235ASI7FXBrEcTMtncrqyxnc4Cwt/doQVSVNzuanVNSi0/gim/nKPyPS459kjU2lYV8zoKtX1LiYbylZuK9+oR9EulVfspS/V8SXHZx0FHhxwgwunalJQyDpe9ZFrvdzU2lNPz5ekE/KCNiAU01YTpVJUqsJQnBuMoyWzi13przPkst7QPZ10jxRo1spawhg9T8u8MhRp/BXfgq8F9/y5l8S6dWlsV9cTNA6p4dalqYDVWNnaXMd5Uqi+KlcQ36Tpz7pR/zXc0n0AxcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADeXZi7PuX4rZCOYyrr4zSVvU2rXSW1S7kn1p0d/5OfcvV9Dk7KPAa84qZv66zcK1rpGxq7V6i3jK8qLr7Gm/BfpSXcnsur3VjGIx1hiMZbYvF2lGzsrWnGlQoUYKMKcEtlFJdyA6mk9O4TSmAtcDp3G0MdjbWHLSoUY7Jebb75Sfe29231bPVAAAAAAAAAAAAAAAAAAFc3bp1/9sOMdXCWdfnxmmoOyppPeMrhtOvL58yUP4ZOLjtrmjw64VZzVUpQ95t6Dp2UJfjuJ/DTW3iuZpv0TKormvWubmrc3FWdWtVm51Jze8pSb3bb8W2Bxm7+xXoD7ccarG6u6HtMVgEsjdbr4ZTi/6mD+c9nt4qEjSBZD2INAfYvgxbZO7oezymopLIV218UaLW1CHy5Hz+jqMDe4AAGK8UOH+l+JGl6un9UWEbm3lvKjWjsq1tPbpUpy/DJfyfc010MqAFWfH7g3qThHqT3PJRd5h7mT+r8nThtTrr9GS/BUS74/mt11NZlvmutJ4HW2l7zTepLCF7jruO04S6ShLwnF98ZJ9U0Vn9oXhBm+EesHjbznu8RdOU8ZkOXaNeC74y8FUjuk18mujQGswAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2Z2deE2T4ta7p4ii6lviLXlrZW9iv+DS36Rjv055bNRXzfdFmB6bwuS1Fn7HBYe1ndZC/rxoW9GPfKcnsvkvFt9Et2y0vgRw0xfCvh7Z6bsOSrdte2yN2o7O5uGlzS/ZX3YrwSXju2GWaYwWJ0zp+ywODsqVljrGkqVvQprpGK/wCbb3bb6ttt9WeiAAAAAAAAAAAAAAAAAAAPJ1lqDH6V0plNSZSfJZY21qXNbr1ajFvlXq+5LzaAhf8ASKa/+sdU4vh3Y197fFQV7fqL6O4qR/q4v1jTe/8AFImnr6y1BkNV6rympMpPnvcldVLmr16Jyk3yr0S6JeSR5AGfdn7QlTiNxawmmHCTs6lb29/JfhtqfxVOvhulyp+ckWsUadOjShRpQjTpwiowhFbKKXRJLwRFb6O/QH1TovJcQL6hy3Wam7Wycl1jbU5fE1+1UTX8NEqwAAAAAAYpxX0FguJGib3S2fo81CuuajWil7S2qpPlqwfhJb/mm0+jZlYAqP4paHznDrW1/pXP0VG5tZb06sU+S4pP7lWD8YyX8nun1TMXLLO1zwepcUNBTu8Xbx+1GIhKrj5pbSrx7527fjzbbx37pbdybK1asJ0qkqVWEoTg3GUZLZxa7015gfIAAAAAAAAAAAAAAAAAAAAAAAABlnCLRd7xC4jYbSNk5Qd/cKNarFb+xox+KpP8oKTXm9l4gSs+j54Uq2sa/FPNWy9tcqdthozj1hT35atZesmnBPyU/CSJgHSwOKsMHhLLDYu3jbWNjQhb29KPdCEIqMV/JHdAAAAAAAAAAGuuNvGTRvCfEK4z127jJVoOVpjLdp16/hvt+CG/4pdOj23fQDYkpRjFylJRilu23skjSfFDtP8ACzRM6tnRyc9R5KnunbYrapCMvKVVtQXrs5NeRC7jVx/19xPrVrW9vnicFJ/BirKbjTcfD2su+q+7v6b90UalAk9rbtn8QMnOdLS+GxOn7d/dnUTu66/eltD/AEGpc/xx4u5ycpX/ABCz8VLvja3LtYv92lyr/I12APautWapupudzqXM15Pq3Uvqsn/nI+7LWWr7KanZ6qzttJdzpZCrBr+UjwgBs7TnaA4x4GcZWev8vXUfw301dpry/rlI9zif2k9fcQ+HNTRmeoYunSrV6dSvdWlKVOpXhBtqE1zOO3Nyy6JfdRpUAD2tC6bv9YaxxOmMZHe7yd1C3pvbdQ5n1m/SK3k/RM8Ul19HToD3zPZbiNfUN6OPi7DHOS6OtNJ1Zr1jBxj/ABH5ATL0rg7DTWmcbp7F0vZWWOtadtQj48sIpJvzb23b8W2emAAAAAAAAAAIB9vThTHS2s6evcNb8mIz9Vq7jCPw0LzbeT+VRJy/aU/Qn4Yrxa0Vj+IXDzL6SyKioX1BqjVa39jWXWnUX7Mkn6rdeIFSIO7nsXfYPN32GydCVvfWNxO3uKUu+FSEnGS/mjpAAAAAAAAAAAAAAAAAAAAAAAm59HPoGNthczxFvqH9deTePx0pLupQadWS9JT5Y/w5eZCmxtbi+vaFlaUpVri4qRpUqce+c5PZJerbRbdwv0tb6J4eYLSltyuGMsqdGcorpOptvUn+9Nyl+YGSAAAAAAAAAGru0nxasOEugqmT2pXGbveahirST+/U26zku/khum/PdLpzbgY52peP2O4VYx4bDewv9XXdPmo0JPenZwfdVqpf6YePe9l312alzuY1LnLrN57I3GRyN3PnrXFeXNKT/wBku5JdEkkuh86gzGT1Bm7zNZm9q3uQvasq1xXqveU5Pvf/APEuiXRHQAAAAAAAAAAADmsra4vbyhZ2lGda4r1I0qVOC3lOcnsopebbSLYOCmibfh5wvwek6Kg6tnbp3VSP9pcS+KrL1XM3t6JLwIP9g7QH2s4vLUV5Q58bpqCum2vhlcy3VGP5NSn86a8yxIAeHhNW6czWoszp7GZW3uMphakKd/bRfx0XOKlF+q2e263SaafVHFxK1VY6H0HmdWZDZ0MZazrcje3tJ90IL1lJxivVlXej+Jmq9McTnxCsL9yzFW6qXF3zt8l0qkuapTmvGMt+7w6NbNJgWygxXhPrvC8R9C2Gq8HU/qbmO1ai5bztqy+/Sl6p/wA0010aMqAAAAAAAAAgR9IVoFYPiHY63sqPLZ5+l7O65V0jdUkk2/Lmhyv1cZMi8Wf9rjRkda8CM/aU6XtL3G0/rOz2W7VSinKSXrKn7SP7xWAAAAAAAAAAAAAAAAAAAAAAAbk7GWlVqrtBYCNWnz22Kc8pW6d3sUnTf+K6ZZoQx+jV0/F1NYapqU/iSoY+hPbwfNUqL/KkTOAAAAAAAAA4b66trGyr3t5XhQtrenKrWqze0YQit5Sb8EkmyrLtEcS7zinxMv8AUE51I42k3b4uhLp7K3i3yvbwlLrJ+stu5ImH2/Nfz0xwqo6Vsa/Jf6kqujU5X1ja09nV/vNwh6qUivcAAAAAAAAAAAABtLss6A/pF4zYfE3FD2uLs5e/5LdbxdCk0+V+k5OEP3mBObshaA+wHBXF0Lqh7PK5ZfWV/utpRlUS5IPy5YKKa/S5vM3ADr5O9tcZjbrI31eFC0taM69erLuhCKcpSfokmwIhfSM6/wDZWeG4b2Nf4qzWSySi/wACbjRg/m+eTX6sGQsMr4u6xutf8SM5q275ovIXUpUacn1pUV8NKH5QUV+RigEtvo3K2pnqzU1vb1P/AKajZ053cJptK6ctqTj5NxVTfzSW/htOI0/2QtAfYHgpi6F1Q9nlMsvrK+3W0oyqJckH5csFBNefN5m4AAAAAAAAAPypCNSEoTipQkmpRa3TXkypLi7pmWjeJ+o9MODjTx+Qq0qO/e6XNvTf5wcX+ZbcV6/SE6fWL44UcxThtTzOLo1py276tNuk1/dhT/mBHEAAAAAAAAAAAAAAAAAAAABYv2AsSsd2fLe95NnlMnc3W/nytUf/ANRIE1j2U7H6v7O+i7dLbnxyr/4s5VP+82cAAAAAAAD5qzhSpyqVJKMIJyk33JLvYFbnbj1ZLUvH3J2dOq52mDo08dRW/Tmiueo9vPnnJfuo0Yepq7L1c/qvL52u26uRvq13Pfv3qTc3/wAzywAAAAAAAAAAAFgnYA0B9m+F1fV97Q5chqOqp0nJdY2tNuNNenNLnl6pw8iEfCjR95r7iLhNJWXNGeRuo06lSK3dKkviqT/dgpP8i2fE4+zxOKtMXj6EaFnZ0IW9vSj3QpwioxivkkkB2SOPb61/9mOFFPStlX5MjqSo6MlF9Y2sNpVX+83CHqpS8iRxWB2stf8A9IXGnLX9tX9ri8c/q7H7PeLpU205r0lNzkn5NeQGpjaPZb0B/SLxmw+IuKPtcZaS9/yO63i6FJp8r9JycIfvGriwL6P3QH2d4YXGsb2hy3+oqu9FyXWNrTbjD5c0ueXquQCSx8zqQhKEZzjFzfLBN7OT2b2Xm9k3+TPoi9xk4syodr3h5o2wuf8AweKvI075Rl0nc3kHSjF+fLCpFr1qPyAlCAAAAAAAARC+krxEamA0dnYw2lQuri0nLzVSEJxT/wAOX82S9I5/SF2aueAtCvy7u0zdvV38t4VYf94FeYAAAAAAAAAAAAAAAAAAAAC2PgJTjT4HaEjHuenLCX5u3g3/AMzNTC+A0lPgfoNxe6+zmPX8ramjNAAAAAAAeBxJuZWXDvUt5B7SoYm6qp+TjRk/9j3zHOKFCV1wz1TbRW8q2Gu6aXq6M0BUUAAAAAAAAAAAB3cFi73N5uxw2Nouve31xTtremu+dSclGK/m0BMT6ObQHJQzPEi/odam+NxrkvwraVaa/Pkin6TRMcx3hnpSy0NoHC6Tx+zoY21jRc0tvaT75zfrKblL8zIgNT9rDX/9HvBbL5C2r+yymQj9XY/Z7SVWomnNesYKck/NLzKvySHb71/9puK1PSllX58dpuk6U+V9JXU9pVX+6lCHo4y8yN4GS8LdI3mu+IWE0lY8yq5K6jSnNLf2VPvqT/dgpS/Itow2Os8PiLPE46hGhZ2VCFvb0o90KcIqMUvkkiHv0c2gN5ZniRfUO7fG41yXylWmv9EU/wBtEzQPF11qSw0ho7LanyctrTGWk7iot9nPlXSC9ZPaK9WirDDalyOX4x4/VuRrc9/dZ6jfVpr9N14z6eSXgvBJEsvpFtf+5adxHDqxr7VsjJX+QUX1VCEmqUX6SmnL+EiG+hqErrW2CtoJuVXJW9NbebqRQFv4AAAAAAABort201Ps35mT/s7u0kv8eK/3N6mjO3XOMezdnIt9Z3Nol8/bwf8AsBW0AAAAAAAAAAAAAAAAAAAAAtP7Lt6r/s+aJrp78uLp0f8ADbp/9psk0N2Dcqsj2dcZa8/M8ZfXVo/Teo6qX8qqN8gAAAAAA47qhTubWrbVo81OrBwmvNNbM5ABTpncdWxGcv8AE3Kar2VzUt6ia/FCTi/80dI3F2ytLS0v2g9QxjT5LbKzjlKD2+8qy3m/8VVF+Rp0AAAAAAAAASd+j50B9fcR7vW19Q5rHT9Llt3JdJXVVNL58sOZ+jlBkY4pyajFNt9El4lpvZn0CuHPB3DYGtRVPI1oe+ZLp194qJOUX+yuWH7gGyjFeLesbTQHDjOatu+WSx9rKdGnJ9KtZ/DSh+9NxX5mVELfpGdf+0usNw3sa/w0kslklF/iacaMH8lzya/WgwIhZS+u8nk7rJX9eVe7u6069erLvnOcnKUn6tts/cPj7zL5azxWPoSr3l5Xhb29KPfOpOSjGK+baR1SSv0f+gPtHxRr6vvaHNYacpc9JyXSV1UTjD58seeXo1ACbvCvSFnoPh5hNJWXK6eOtY05zitva1X8VSf703KX5mRXVeja21W5uasKVGjB1KlSb2jCKW7bfgkjkNA9unX/ANkODdbCWlfkyepJuxppPaUbdJOvL5crUP4gEG+OWt63ETinnNVzlP2F1cOFnCX9nbw+GktvB8qTfq2d3s1YiWc496KsIw51HLUbmS840X7aX+VNmvCTv0dmlpZTivlNUVae9vhMe4Qlt3V675Y/6I1QJ9gAAAAAAAEePpBbtW3AD2LfW6zFtRX5KpP/ALCQ5Ez6SnK+x0VpLB83/wB3ka13y/8As01Df/5wINAAAAAAAAAAAAAAAAAAAAAJrfRq56M8Tq/S857SpV6F/Shv3qcXTm/y5Kf80TCK2+wzqhac7QGNtatTkt83b1cbUbfTmklOn+bnTjH94skAAAAAAAAAit9IjoOeW0Pi9d2VFyuMJV93vHFdXbVWuWT/AGamy/iMggXE6kw+P1DgL/BZagriwv7edvcU3+KE00/k+vR+DKo+L2hcnw44g5TSeUUpStKu9vWcdlcUJdadRfNd/k914AYkAAAAAAADdPY00B9u+NWOnd0PaYrCbZK83XwycGvZQfg96nL08YxkWXmguwxoD7HcG6OavKHs8nqSSvqra2lGhttQj8uVuf8AEN+gdLO5SywmEvszkqyoWVjb1Lm4qP8ABThFyk/5JlS3EvVd7rjXua1ZkN1Xyd1KsoN7+zh3QgvSMFGK+RNv6QbX/wBQcNrTRVlX5b7UNXmuFF9Y2tJpy+XNPkXqlNEAgBaN2WNAf0d8GMPirij7LJ3kff8AI7raSrVUnyv1hFQh84sgv2RdAfb/AI1Yq2uqHtMXin9ZX+63jKFNrkg/Pmm4Jry5vIs6AFaPbN1/9ueNeRpWtf2mLwe+NtNn8MnBv2s186nMt/GMYk6O0lr1cOeD2b1DSqqnkJ0/dMd16u5qbxg158q5p7eUGVXSlKUnKTcpN7tt9WwPwsq7FWg56J4I2Fe8ounks7P6yuVJfFGE0lSh+VNRlt4OciF3ZW4X1eJ/FOzsrmhKWCxrjeZWe3wumn8NL51JLl89uZ+BZ9CMYQUIRUYxWySWySA/QAAAAAAACAf0i2eV/wAXcVgqdTmp4rFRc47/AHatWcpNf3I02T8KoOP2qI6y4zaq1FSqe0t7nIThbz3+9Rp7U6b/ALkIgYMAAAAAAAAAAAAAAAAAAAAA7uByd3hM5YZnH1PZ3lhc07mhP9GpCSlF/wA0i3XRues9U6SxOo8fJO1ydnSuqfXflU4qXK/Vb7P1RT6T1+jy15HMcPr/AELeVt7zBVnWtYyfWVrVbey/Zqc2/wC3ECUYAAAAAAABozte8GI8UdGRyWGowWqcRCUrN9E7ql3yt2/Xvi33S6dFJs3mAKa7ijWtripb3FKdGtSm4VKc4uMoST2aafVNPwOMnp2vezj9sPeNdaEtYR1BGPPf2EEkr9L8cPKr5r8f7X3oH3FGtb16lvcUp0a1KThUpzi4yhJPZpp9U0/ADjAAAzngPoarxG4rYPS0Yz92r11UvZx6cltD4qj38G4ppeskYMTn+js0B9W6UynEO+obXGWm7Owcl1VvTl/WSXpKotv4QErrejStrenb29OFKjSgoU4QW0YxS2SS8EkfbaSbb2S72DTXbG1/9g+CmSdrX9nlcz/5bZbP4o+0T9pNeK5aals/CTiBBjtOa+fEbjJmc5Qre0xtCfuWN67r3ek2lJekpc0/3zWYMv4N6LueIPEzB6St+dRvrlK4qR76dCPxVZ/NQUtvXZeIE4OwVoD7K8I3qW8ocmS1LUVzu11jaw3VFfnvOfqpx8iRJw4+0trCwt7CyowoW1tSjRo0oLaMIRSUYr0SSR5HEDU1hozROY1TkmvdcZaTuJR32c2l8MF6yltFerQEJ/pDNffXXECw0LY1+azwNL2t2ovpK6qpPZ+fLT5fk5yRG3TODyupM/ZYHCWVW9yN9WVG3oU11lJ/8ku9t9Ek2+iO9V+0fEHXVapQtrjK57N3s6vsqMHKVWrUk5PZeC6v0SXkiwTsrcA7HhViPrnNKje6uvaW1etH4oWcH1dGm/F/pS8e5dF1DL+zzwtx3Cfh7b4Gg6dfJV2q+Tu4r/j12uqXjyR+7FeXXvbNjAAAAAAAAAAa77SOsloTgtqPPQq+zu3au1suvX29X+rg1+zzc3yiyqsl19IzrxXmfw3Duyr70sfD6wyEYvp7aaapRfrGDlL5VURFAAAAAAAAAAAAAAAAAAAAAABsDs9cQavDPitiNTc0/cVP3fIwj157aeyn08XHpNLzgjX4AuUta9G6tqVzbVYVqFaCqU6kHvGcWt00/FNHIRh7A/FSOpdFT4f5e55stgqfNZOb61rPfZJebpt8v7Lh5Mk8AAAAAAAAANGdors46Z4oxq5nGypYPVPL0vIQ/qrrZdFXiu/y518S8eZJI3mfFarTo0Z1q1SNOnTi5TnJ7KKXVtvwQFSPEvQep+HWpp6e1Xj3Z3igqtNxmp061NtpVISXfFuL9ejTSfQxgz3j/rupxG4s5vU/PJ2dWt7GwjL8FtT+Gn08G0uZrzkzAgPX0Zp/Iar1ZitNYuHPeZK6p21Lp0i5Pbmfolu2/JMts0dgMfpXSuL03i6fJZY21p21FeLUYpbv1fe34tshh9HXoD6w1PleIl9Q3t8XB2WPcl0dxUj/AFkl6xptL+KTkAFdPbt1/wDa7jDPAWdfnxumoOzgk94yuG068vmmow/hk4+N2t6HDvhdnNWVXD21pbuNpCX9pcT+GlHbxXM036JvwKn7u4r3d3Wu7qrOtXrVJVKtSb3lOUnu235tsDiJs/Rz6A93xeY4j31Dapdt47HOS/s4tSrTXzkox3/UkvEiFo/SWo9W5W2xun8Pe39a4rQoqVGhKcIOTS3lJJqMVvu2+iRa9w80vY6L0Ph9K41L3bGWkKClts6kkvim/WUnKT9WwPeND9rLTOt+JVth+GukLV0bO6qq+zOSuG4W9GlB7U6bf45OW8uSKbXJFvZPc3wANX8B+COkeEuLf1ZS+sM3Why3eVuIL2tReMYL+zhv+Fd/TdvZG0AAAAAAAAAAB4+t9SYzSGkcpqfMVfZ2ONtpV6r8ZbLpFfrSe0UvFtHsEJvpB+KivL+34W4a43o2soXWYlB9JVdt6VF/sp87Xm4eMWBFrXOpMjq/WGV1PlZ815krqdxU67qPM+kV6RW0V6JHigAAAAAAAAAAAAAAAAAAAAAAAAAZBw71dl9C60xmq8HV9ne4+sqkU/u1I90qcv1ZRbi/RlqfDDWuG4g6Ix2q8HV5rW9p7yptpzoVF0nSn+tF7r16NdGiow3d2SuNNbhVrF2WWq1J6Vys4xvqa3l7tPujcRXmu6SXfHzcYgWVA4rO5t720o3lpXp3FtXpxqUqtOSlCpCS3Uk10aae+5ygAAAAAA0P24df/Yzgzc4u0r+zymo5OwopP4o0dt68/lytQ+dRG+CtXtpa/wDtzxqvra0r+0xWBTxtrs/hlOL/AK6a+c91v4qEQNInJa0K11c0ra3pTq1q01Tp04LeU5N7JJeLbOMkB2FdAfa/jFSzl5Q58ZpqCvaja3jK4baoR+akpT/hgTi4F6Ho8OuFeD0rCMPeLa3U7ycf7S4n8VV7+K5m0vRIzYADpZrEYnN2is8zi7LJWympqjd28asFJbpS5ZJrfq+vqedZ6L0dZTU7PSeBtpJ7p0sdSg1/KJ7wA/IQhTgoQjGMUtkktkj9AAAAAAAAAAAAAAeXq3UOI0ppu+1Dnr2nZ42xpOrXqz8Eu5JeMm9kkurbSQGFdozilY8KeHN1m5yp1ctcJ2+KtZP/AItdr7zX6EPvS+SXe0VdZbIXuVyl1lMlc1Lq9u60q9xWqPeVScm3KTfm22Zzx/4pZXixr6vn7xTt8fR3o4yyct1b0N+m/g5y75Pz6dyW2vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACUvY27Qi0jXoaA1teP7P1p8uPvqsulhOT+5N/wDpNvv/AAt+Te08oSjOKnCSlGS3TT3TRTQSl7J3aXq6RVronX9zVr6f3VOxyEt5TsF4Qn4ypeXjH1XRBPMHFZ3NveWlG7s7ilcW9aCqUqtKalCpFrdSi10aa8UcoAAAa57SGvY8OOD+a1DSqqGQlT90xy8Xc1N1Brz5VzT28oMqunKU5uc5OUpPdtvdtkoPpCtf/XfEGx0NY1+azwNP2t0ovpK6qpPZ+fLDlXo5zRF4AWZdjjQH2D4KY33qh7PK5rbJXu6+KPOl7OD8Vy0+XdeEnIg12Y9APiNxjw2Dr0faY2hP33JdN17vSabi/SUuWH75aWkkkktku5AAAAAAAAAAAAAAAAAADztTZ3D6awV1nM9kKGPx1pDnr3FaW0Yr/dt9El1baS6gc+XyNhiMZc5TKXdGzsrWnKrXr1pqMKcEt3Jt9yK5O1bx2vOKuf8AqnDTrW2ksfVbtaT3jK7qLp7eov58sX3J+bZ99qLtBZTipkJ4TC+3x2kbepvToN7VLySfSpV28PGMO5d73e22iQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3f2cu0RqThXcU8TfqrmdKznvUsZT/rLbd9Z0JPu83B/C+vc3uWC8OtdaW4gaep53SmWo39rLZVIxe1ShP8AQqQfWEvR9/et11KizIdA601PoTP085pTMXGNvYdJOm94VY/ozg/hnH0aYFu54HEbVNjonQuZ1XkWvd8ZazruO+3tJJbQgvWUnGK9WjQHA/tdaX1LChieIMKOm8s9oq8ju7Ks/Nt7uk/2t4/rLuMW+kO4j0KmIwWgMPe061O9UcpfTo1FKMqS3VCO66NN80/3YPxAh7qHLX2fz1/nMnWda+v7mpc3FR/inOTlJ/zZ0AZJww0le664gYXSVhzKrkrqNKU0t/ZU++pU+UYKUvyAm19H3oD7P8NbrWl9Q5b7UNXag5LrG1ptqPy5p88vVKDJNHTwmMssLhrLD42hGhZWNvC3t6Ue6FOEVGK/JJHcAAAAAAAAAAAAAAAOnm8ti8HjK2UzORtcdY0I81W4uasadOC9ZSeyIl8c+2JaW0bjC8LLf3qv1hLNXVPanD1o0pdZP9aey/VkgJB8ZOLWjeFeF9+1Jfp3dWLdpjqDUri5f6sfCPnJ7Jee+ydd/HXjPq3i1mvbZet7niKE3KyxVCb9jR8FKX6c9u+T83skuhgmos3l9RZi4zGdyV1kshcS5qtxcVHOcn834LwXcl3HngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD9cpS23bey2W77kfgAExvo49D0Kt1neIN37OdWh/5bYw3TlBtKdWe3eunJFP8AbRDk7uFy+Vwl/DIYbJ3uNvIfcr2leVKpH5Si0wLiwVuaK7VvGDTqhSu8tZ6gtodPZ5S2Upbf+5Dlm36ybNx6W7b+MnGMNUaFu6DX3quNu41d/lCajt/eYEwAaHwfa14L5GMXdZnJYmUvw3mOqNr5ukpr/My/H8eODt8k6HEPBQ37vb1/Y/8AWkBskGFx4tcK5LdcS9G/nnLZf95+VeLnCqnBzlxK0c0v0c1byf8/JTAzUGsMn2geDOPi5XHEHETS/wDx3Ou//jjIw3Pdr7g5jlL3K6zWZa7vc8e4J/4zgBIEEMdVduCbjOnpbQcYy/BXyV7uvzp00v8ArNM637TXGLVMZ0ZaneGtp/2OIpK22+VRb1P9YFiOt9d6N0Tae9ar1JjcTDl5owuKyVSa/Upr4p/upkZuKXbSxVrGrZcOsDUv63WMchk06dFesaSfNJftOHyZCm9u7q+uql3e3Na6uKr5qlWtNznN+bb6s4QMs4j8R9a8Q8ir3V2fusi4tulRbUKFH9inHaMfmlu/FsxMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//2Q==",
@@ -9,128 +9,145 @@ const LOGOS = {
 const TODAY = new Date();
 TODAY.setHours(0,0,0,0);
 
-// ─── TGE CONFIG ─────────────────────────────────────────────────────────────
+// TGE DATES
 const SOLSTICE_TGE_DAYS = [7, 14, 21, 30];
 
-const ONRE_TARGETS = [
-  { date: "2026-06-30", label: "Q2 '26" },
-  { date: "2026-09-30", label: "Q3 '26" },
-  { date: "2026-12-31", label: "Q4 '26" },
-  { date: "2027-03-31", label: "Q1 '27" },
-  { date: "2027-06-30", label: "Q2 '27" },
-];
-const ONRE_TGE_DAYS = ONRE_TARGETS.map(t => Math.round((new Date(t.date) - TODAY) / 86400000));
-const ONRE_TGE_LABELS = Object.fromEntries(ONRE_TGE_DAYS.map((d,i) => [d, ONRE_TARGETS[i].label]));
+const ONRE_TGE_DAYS = [90, 180, 270, 365, 455]; // approximate from your screenshot
+const ONRE_TGE_LABELS = {
+  90: "Q2 '26", 180: "Q3 '26", 270: "Q4 '26", 365: "Q1 '27", 455: "Q2 '27"
+};
 
-const PIGGYBANK_TARGETS = [...ONRE_TARGETS];
-const PIGGYBANK_TGE_DAYS = PIGGYBANK_TARGETS.map(t => Math.round((new Date(t.date) - TODAY) / 86400000));
-const PIGGYBANK_TGE_LABELS = Object.fromEntries(PIGGYBANK_TGE_DAYS.map((d,i) => [d, PIGGYBANK_TARGETS[i].label]));
+const PIGGYBANK_TGE_DAYS = [90, 180, 270, 365, 455];
+const PIGGYBANK_TGE_LABELS = ONRE_TGE_LABELS;
 
 // Allocation scenarios
 const SOLSTICE_ALLOC_SCENARIOS = [
-  { pct: 0.080, label: "8%", tokens: "80M", icon: "🟠", color: "text-orange-400", badgeBg: "bg-orange-900/50", note: "Lower bound — 7.5% base + minimal milestone bonus." },
+  { pct: 0.08, label: "8%", tokens: "80M", icon: "🟠", color: "text-orange-400", badgeBg: "bg-orange-900/50", note: "Lower bound — 7.5% base + minimal milestone bonus." },
   { pct: 0.085, label: "8.5%", tokens: "85M", icon: "🟡", color: "text-yellow-400", badgeBg: "bg-yellow-900/50", note: "Confirmed ICO allocation from the Legion launchpad sale." },
 ];
 
 const ONRE_ALLOC_SCENARIOS = [
-  { pct: 0.05, label: "5%", tokens: "50M", icon: "🔴", color: "text-red-400", badgeBg: "bg-red-900/50", note: "Very low — most allocation to team/investors." },
-  { pct: 0.08, label: "8%", tokens: "80M", icon: "🟠", color: "text-orange-400", badgeBg: "bg-orange-900/50", note: "Conservative. Typical for protocols with significant VC backing." },
-  { pct: 0.10, label: "10%", tokens: "100M", icon: "🟡", color: "text-yellow-400", badgeBg: "bg-yellow-900/50", note: "Base assumption. Common industry standard." },
-  { pct: 0.12, label: "12%", tokens: "120M", icon: "🟢", color: "text-green-400", badgeBg: "bg-green-900/50", note: "Generous. Strong community focus." },
-  { pct: 0.15, label: "15%", tokens: "150M", icon: "🚀", color: "text-purple-400", badgeBg: "bg-purple-900/50", note: "Very generous. Broad distribution." },
+  { pct: 0.05, label: "5%", tokens: "50M", icon: "🔴", color: "text-red-400", badgeBg: "bg-red-900/50", note: "Very low" },
+  { pct: 0.08, label: "8%", tokens: "80M", icon: "🟠", color: "text-orange-400", badgeBg: "bg-orange-900/50", note: "Conservative" },
+  { pct: 0.10, label: "10%", tokens: "100M", icon: "🟡", color: "text-yellow-400", badgeBg: "bg-yellow-900/50", note: "Base case" },
+  { pct: 0.12, label: "12%", tokens: "120M", icon: "🟢", color: "text-green-400", badgeBg: "bg-green-900/50", note: "Generous" },
+  { pct: 0.15, label: "15%", tokens: "150M", icon: "🚀", color: "text-purple-400", badgeBg: "bg-purple-900/50", note: "Very generous" },
 ];
 
 const PIGGYBANK_ALLOC_SCENARIOS = [
-  { pct: 0.05, label: "5%", tokens: "50M", icon: "🔴", color: "text-red-400", badgeBg: "bg-red-900/50", note: "Very low — minimal community share." },
-  { pct: 0.08, label: "8%", tokens: "80M", icon: "🟠", color: "text-orange-400", badgeBg: "bg-orange-900/50", note: "Conservative." },
-  { pct: 0.10, label: "10%", tokens: "100M", icon: "🟡", color: "text-yellow-400", badgeBg: "bg-yellow-900/50", note: "Base case. Standard for Solana xStocks." },
-  { pct: 0.12, label: "12%", tokens: "120M", icon: "🟢", color: "text-green-400", badgeBg: "bg-green-900/50", note: "Generous." },
-  { pct: 0.15, label: "15%", tokens: "150M", icon: "🚀", color: "text-purple-400", badgeBg: "bg-purple-900/50", note: "Maximum upside." },
+  { pct: 0.05, label: "5%", tokens: "50M", icon: "🔴", color: "text-red-400", badgeBg: "bg-red-900/50", note: "Very low" },
+  { pct: 0.08, label: "8%", tokens: "80M", icon: "🟠", color: "text-orange-400", badgeBg: "bg-orange-900/50", note: "Conservative" },
+  { pct: 0.10, label: "10%", tokens: "100M", icon: "🟡", color: "text-yellow-400", badgeBg: "bg-yellow-900/50", note: "Base case" },
+  { pct: 0.12, label: "12%", tokens: "120M", icon: "🟢", color: "text-green-400", badgeBg: "bg-green-900/50", note: "Generous" },
+  { pct: 0.15, label: "15%", tokens: "150M", icon: "🚀", color: "text-purple-400", badgeBg: "bg-purple-900/50", note: "Very generous" },
 ];
 
 const ALLOC_SCENARIOS = { solstice: SOLSTICE_ALLOC_SCENARIOS, onre: ONRE_ALLOC_SCENARIOS, piggybank: PIGGYBANK_ALLOC_SCENARIOS };
 const DEFAULT_ALLOC_IDX = { solstice: 0, onre: 2, piggybank: 2 };
 
-// PROTOCOLS (your original config)
+// PROTOCOLS (complete)
 const PROTOCOLS = {
   solstice: {
-    id: "solstice", name: "Solstice Finance", icon: "🔥",
-    tokenSymbol: "SLX", pointsLabel: "Flares",
-    totalSupply: 1_000_000_000, currentTvl: 370_000_000,
-    myPoints: 438_600_000, totalPoints: 379_100_000_000,
-    myDaily: 10_000_000, totalDaily: 1_800_000_000,
-    campaignEndDays: null,
-    tgeDays: SOLSTICE_TGE_DAYS, defaultFdvIdx: 3,
-    fdvScenarios: [ /* your original fdvScenarios for solstice */ ],
-    gradientFrom: "from-orange-500", gradientTo: "to-yellow-400",
+    id: "solstice",
+    name: "Solstice Finance",
+    tokenSymbol: "SLX",
+    pointsLabel: "Flares",
+    totalSupply: 1000000000,
+    currentTvl: 370000000,
+    myPoints: 478830000,
+    totalPoints: 387380000000,
+    myDaily: 5800000,
+    totalDaily: 1300000000,
+    tgeDays: SOLSTICE_TGE_DAYS,
+    defaultFdvIdx: 3,
+    gradientFrom: "from-orange-500",
+    gradientTo: "to-yellow-400",
     bgGradient: "from-gray-950 via-orange-950 to-gray-950",
-    accentText: "text-orange-400", accentBg: "bg-orange-500", allocAccent: "bg-amber-700",
+    accentText: "text-orange-400",
+    accentBg: "bg-orange-500",
+    allocAccent: "bg-amber-700",
     logoBg: "bg-white",
+    fdvScenarios: [
+      { fdv: 50000000, label: "$50M", icon: "🐻", assessment: "Bear", color: "text-red-400", borderColor: "border-red-500/40", bgColor: "bg-red-950/40", badgeBg: "bg-red-900/50", rationale: "Deep bear. FDV/TVL 0.14x." },
+      { fdv: 100000000, label: "$100M", icon: "📉", assessment: "Bearish", color: "text-orange-400", borderColor: "border-orange-500/40", bgColor: "bg-orange-950/40", badgeBg: "bg-orange-900/50", rationale: "Conservative. FDV/TVL 0.27x." },
+      { fdv: 130000000, label: "$130M", icon: "💰", assessment: "ICO Ref", color: "text-yellow-400", borderColor: "border-yellow-500/40", bgColor: "bg-yellow-950/40", badgeBg: "bg-yellow-900/50", rationale: "Legion launchpad ICO reference." },
+      { fdv: 200000000, label: "$200M", icon: "✅", assessment: "Base ✓", color: "text-green-400", borderColor: "border-green-500/40", bgColor: "bg-green-950/40", badgeBg: "bg-green-900/50", rationale: "Most likely. FDV/TVL 0.54x." },
+      { fdv: 300000000, label: "$300M", icon: "🚀", assessment: "Bull", color: "text-purple-400", borderColor: "border-purple-500/40", bgColor: "bg-purple-950/40", badgeBg: "bg-purple-900/50", rationale: "Bull. FDV/TVL 0.81x." },
+    ],
   },
   onre: {
-    id: "onre", name: "OnRe Finance", icon: "🛡️",
-    tokenSymbol: "ONRE", pointsLabel: "Points",
-    totalSupply: 1_000_000_000, currentTvl: 128_000_000,
-    myPoints: 42_087_793, totalPoints: 51_513_058_629,
-    myDaily: 649_593, totalDaily: 590_232_161,
-    campaignEndDays: null,
-    tgeDays: ONRE_TGE_DAYS, defaultFdvIdx: 2,
-    fdvScenarios: [ /* your original fdvScenarios for onre */ ],
-    gradientFrom: "from-blue-500", gradientTo: "to-cyan-400",
+    id: "onre",
+    name: "OnRe Finance",
+    tokenSymbol: "ONRE",
+    pointsLabel: "Points",
+    totalSupply: 1000000000,
+    currentTvl: 128000000,
+    myPoints: 44690000,
+    totalPoints: 53910000000,
+    myDaily: 649600,
+    totalDaily: 599700000,
+    tgeDays: ONRE_TGE_DAYS,
+    defaultFdvIdx: 2,
+    gradientFrom: "from-blue-500",
+    gradientTo: "to-cyan-400",
     bgGradient: "from-gray-950 via-blue-950 to-gray-950",
-    accentText: "text-blue-400", accentBg: "bg-blue-600", allocAccent: "bg-cyan-700",
+    accentText: "text-blue-400",
+    accentBg: "bg-blue-600",
+    allocAccent: "bg-cyan-700",
     logoBg: "bg-gray-800",
+    fdvScenarios: [
+      { fdv: 50000000, label: "$50M", icon: "🐻", assessment: "Bear", color: "text-red-400", borderColor: "border-red-500/40", bgColor: "bg-red-950/40", badgeBg: "bg-red-900/50", rationale: "Deep bear." },
+      { fdv: 100000000, label: "$100M", icon: "📉", assessment: "Bearish", color: "text-orange-400", borderColor: "border-orange-500/40", bgColor: "bg-orange-950/40", badgeBg: "bg-orange-900/50", rationale: "Conservative." },
+      { fdv: 150000000, label: "$150M", icon: "✅", assessment: "Base ✓", color: "text-green-400", borderColor: "border-green-500/40", bgColor: "bg-green-950/40", badgeBg: "bg-green-900/50", rationale: "Most likely." },
+      { fdv: 200000000, label: "$200M", icon: "📈", assessment: "Bullish", color: "text-yellow-400", borderColor: "border-yellow-500/40", bgColor: "bg-yellow-950/40", badgeBg: "bg-yellow-900/50", rationale: "Bullish." },
+      { fdv: 300000000, label: "$300M", icon: "🚀", assessment: "Bull", color: "text-purple-400", borderColor: "border-purple-500/40", bgColor: "bg-purple-950/40", badgeBg: "bg-purple-900/50", rationale: "Bull." },
+    ],
   },
   piggybank: {
-    id: "piggybank", name: "Piggybank", icon: "🐷",
-    tokenSymbol: "OINK", pointsLabel: "Oinks",
-    totalSupply: 1_000_000_000, currentTvl: 20_000_000,
-    myPoints: 444_765, totalPoints: 120_000_000,
-    myDaily: 15_000, totalDaily: 3_500_000,
-    campaignEndDays: null,
-    tgeDays: PIGGYBANK_TGE_DAYS, defaultFdvIdx: 2,
-    fdvScenarios: [ /* your original fdvScenarios for piggybank */ ],
-    gradientFrom: "from-pink-500", gradientTo: "to-rose-400",
+    id: "piggybank",
+    name: "Piggybank",
+    tokenSymbol: "OINK",
+    pointsLabel: "Oinks",
+    totalSupply: 1000000000,
+    currentTvl: 20000000,
+    myPoints: 476800,
+    totalPoints: 129350000,
+    myDaily: 15000,
+    totalDaily: 4500000,
+    tgeDays: PIGGYBANK_TGE_DAYS,
+    defaultFdvIdx: 2,
+    gradientFrom: "from-pink-500",
+    gradientTo: "to-rose-400",
     bgGradient: "from-gray-950 via-pink-950 to-gray-950",
-    accentText: "text-pink-400", accentBg: "bg-pink-600", allocAccent: "bg-rose-700",
+    accentText: "text-pink-400",
+    accentBg: "bg-pink-600",
+    allocAccent: "bg-rose-700",
     logoBg: "bg-transparent",
+    fdvScenarios: [
+      { fdv: 5000000, label: "$5M", icon: "🐻", assessment: "Bear", color: "text-red-400", borderColor: "border-red-500/40", bgColor: "bg-red-950/40", badgeBg: "bg-red-900/50", rationale: "Deep bear." },
+      { fdv: 10000000, label: "$10M", icon: "📉", assessment: "Bearish", color: "text-orange-400", borderColor: "border-orange-500/40", bgColor: "bg-orange-950/40", badgeBg: "bg-orange-900/50", rationale: "Conservative." },
+      { fdv: 20000000, label: "$20M", icon: "✅", assessment: "Base ✓", color: "text-green-400", borderColor: "border-green-500/40", bgColor: "bg-green-950/40", badgeBg: "bg-green-900/50", rationale: "Base case." },
+      { fdv: 50000000, label: "$50M", icon: "📈", assessment: "Bullish", color: "text-yellow-400", borderColor: "border-yellow-500/40", bgColor: "bg-yellow-950/40", badgeBg: "bg-yellow-900/50", rationale: "Bullish." },
+      { fdv: 100000000, label: "$100M", icon: "🚀", assessment: "Bull", color: "text-purple-400", borderColor: "border-purple-500/40", bgColor: "bg-purple-950/40", badgeBg: "bg-purple-900/50", rationale: "Bull case." },
+    ],
   },
 };
 
-// Storage helper
+// Storage
 const storage = {
-  async get(key) {
-    try {
-      if (window.storage?.get) return (await window.storage.get(key))?.value ?? null;
-    } catch(e) {}
-    try { return localStorage.getItem(key); } catch(e) {}
-    return null;
-  },
-  async set(key, value) {
-    try {
-      if (window.storage?.set) { await window.storage.set(key, value); return; }
-    } catch(e) {}
-    try { localStorage.setItem(key, value); } catch(e) {}
-  },
+  async get(key) { try { return localStorage.getItem(key); } catch(e) { return null; } },
+  async set(key, value) { try { localStorage.setItem(key, value); } catch(e) {} },
 };
 
 // Helpers
-const MONTHS_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
-function fmtDateShort(d) { return `${MONTHS_SHORT[d.getMonth()]} ${d.getDate()}`; }
-function fmtDate(days, protoId) {
-  const labels = protoId === "piggybank" ? PIGGYBANK_TGE_LABELS : ONRE_TGE_LABELS;
-  return labels[days] || fmtDateShort(addDays(TODAY, days));
-}
-function fmtUsd(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
 function fmtNum(n) {
-  if (n >= 1e9) return (n/1e9).toFixed(2)+"B";
-  if (n >= 1e6) return (n/1e6).toFixed(2)+"M";
-  if (n >= 1e3) return (n/1e3).toFixed(1)+"K";
+  if (n >= 1e9) return (n/1e9).toFixed(2) + "B";
+  if (n >= 1e6) return (n/1e6).toFixed(2) + "M";
+  if (n >= 1e3) return (n/1e3).toFixed(1) + "K";
   return n.toFixed(0);
 }
+function fmtUsd(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
 
-// Reusable Matrix Table
 function MatrixTable({ title, rows, columns, getValue, selectedRow, selectedCol, onRowClick, onColClick, proto }) {
   return (
     <div className="overflow-x-auto">
@@ -174,7 +191,6 @@ function MatrixTable({ title, rows, columns, getValue, selectedRow, selectedCol,
   );
 }
 
-// Main App
 export default function App() {
   const [protoState, setProtoState] = useState({
     activeProtocol: "solstice",
@@ -211,40 +227,36 @@ export default function App() {
     piggybank: { myPoints: null, totalPoints: null, myDaily: null, totalDaily: null, savedAt: null },
   });
 
-  // Load saved defaults with auto-accrual
   useEffect(() => {
     const load = async () => {
-      try {
-        const raw = await storage.get("airdrop-estimator-defaults");
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          const todayMs = new Date().setHours(0,0,0,0);
-          const accrue = (proto, data) => {
-            const base = { myPoints: null, totalPoints: null, myDaily: null, totalDaily: null, savedAt: null, ...data };
-            if (base.savedAt && base.myDaily && base.totalDaily && base.myPoints !== null && base.totalPoints !== null) {
-              const savedMs = new Date(base.savedAt).setHours(0,0,0,0);
-              const daysElapsed = Math.max(0, Math.round((todayMs - savedMs) / 86400000));
-              if (daysElapsed > 0) {
-                return {
-                  ...base,
-                  myPoints: Math.round(base.myPoints + base.myDaily * daysElapsed),
-                  totalPoints: Math.round(base.totalPoints + base.totalDaily * daysElapsed),
-                  savedAt: new Date(todayMs).toISOString(),
-                };
-              }
+      const raw = await storage.get("airdrop-estimator-defaults");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        const todayMs = Date.now();
+        const accrue = (data) => {
+          const base = { myPoints: null, totalPoints: null, myDaily: null, totalDaily: null, savedAt: null, ...data };
+          if (base.savedAt && base.myDaily && base.totalDaily) {
+            const savedMs = new Date(base.savedAt).getTime();
+            const daysElapsed = Math.max(0, Math.floor((todayMs - savedMs) / 86400000));
+            if (daysElapsed > 0) {
+              return {
+                ...base,
+                myPoints: Math.round(base.myPoints + base.myDaily * daysElapsed),
+                totalPoints: Math.round(base.totalPoints + base.totalDaily * daysElapsed),
+                savedAt: new Date().toISOString(),
+              };
             }
-            return base;
-          };
-          const merged = {
-            solstice: accrue("solstice", parsed.solstice || {}),
-            onre: accrue("onre", parsed.onre || {}),
-            piggybank: accrue("piggybank", parsed.piggybank || {}),
-          };
-          setSavedDefaults(merged);
-          setAppliedPoints(merged);
-          await storage.set("airdrop-estimator-defaults", JSON.stringify(merged));
-        }
-      } catch (e) {}
+          }
+          return base;
+        };
+        const merged = {
+          solstice: accrue(parsed.solstice || {}),
+          onre: accrue(parsed.onre || {}),
+          piggybank: accrue(parsed.piggybank || {}),
+        };
+        setSavedDefaults(merged);
+        setAppliedPoints(merged);
+      }
     };
     load();
   }, []);
@@ -268,53 +280,17 @@ export default function App() {
     const share = myP / totalP;
     const tokens = share * airdropPool;
     return { days, myP, totalP, share, tokens };
-  }), [activeProtocol, effectiveMyPoints, effectiveTotalPoints, effectiveMyDaily, effectiveTotalDaily, airdropPool]);
+  }), [effectiveMyPoints, effectiveTotalPoints, effectiveMyDaily, effectiveTotalDaily, airdropPool]);
 
   const selTge = tgeScenarios.find(s => s.days === selectedDay) || tgeScenarios[1];
   const selFdv = proto.fdvScenarios[selectedFdvIdx];
   const tokenPrice = selFdv.fdv / proto.totalSupply;
   const myUsd = selTge.tokens * tokenPrice;
 
-  const fdvGrid = useMemo(() => tgeScenarios.map(tge =>
-    proto.fdvScenarios.map(f => tge.tokens * (f.fdv / proto.totalSupply))
-  ), [tgeScenarios]);
-
-  const allocFdvGrid = useMemo(() => {
-    const myP = effectiveMyPoints + effectiveMyDaily * Math.max(0, effectiveDay);
-    const totalP = effectiveTotalPoints + effectiveTotalDaily * Math.max(0, effectiveDay);
-    return ALLOC_SCENARIOS[activeProtocol].map(alloc => {
-      const myTokens = (myP / totalP) * (proto.totalSupply * alloc.pct);
-      return proto.fdvScenarios.map(f => myTokens * (f.fdv / proto.totalSupply));
-    });
-  }, [activeProtocol, effectiveDay]);
-
-  const handleProtocolSwitch = (id) => {
-    setProtoState({
-      activeProtocol: id,
-      selectedDay: PROTOCOLS[id].tgeDays[1],
-      selectedFdvIdx: PROTOCOLS[id].defaultFdvIdx,
-      allocIdxByProto: DEFAULT_ALLOC_IDX,
-      activeMatrixTab: "overview",
-    });
-    setCustomDate("");
-  };
-
   const updateManual = (field, val) => {
     setManualPoints(prev => ({
       ...prev,
       [activeProtocol]: { ...prev[activeProtocol], [field]: val }
-    }));
-  };
-
-  const handleApply = () => {
-    setAppliedPoints(prev => ({
-      ...prev,
-      [activeProtocol]: {
-        myPoints: parseInput(manualPoints[activeProtocol].myPoints),
-        totalPoints: parseInput(manualPoints[activeProtocol].totalPoints),
-        myDaily: parseInput(manualPoints[activeProtocol].myDaily),
-        totalDaily: parseInput(manualPoints[activeProtocol].totalDaily),
-      }
     }));
   };
 
@@ -330,6 +306,18 @@ export default function App() {
     return Math.round(num);
   };
 
+  const handleApply = () => {
+    setAppliedPoints(prev => ({
+      ...prev,
+      [activeProtocol]: {
+        myPoints: parseInput(manualPoints[activeProtocol].myPoints),
+        totalPoints: parseInput(manualPoints[activeProtocol].totalPoints),
+        myDaily: parseInput(manualPoints[activeProtocol].myDaily),
+        totalDaily: parseInput(manualPoints[activeProtocol].totalDaily),
+      }
+    }));
+  };
+
   const handleSaveAsDefault = async () => {
     const parsed = {
       myPoints: parseInput(manualPoints[activeProtocol].myPoints),
@@ -343,13 +331,24 @@ export default function App() {
       totalPoints: parsed.totalPoints !== null ? parsed.totalPoints : existing.totalPoints ?? null,
       myDaily: parsed.myDaily !== null ? parsed.myDaily : existing.myDaily ?? null,
       totalDaily: parsed.totalDaily !== null ? parsed.totalDaily : existing.totalDaily ?? null,
-      savedAt: new Date(new Date().setHours(0,0,0,0)).toISOString(),
+      savedAt: new Date().toISOString(),
     };
     const updatedSaved = { ...savedDefaults, [activeProtocol]: newDefaults };
     setSavedDefaults(updatedSaved);
     setAppliedPoints(prev => ({ ...prev, [activeProtocol]: newDefaults }));
     setManualPoints(prev => ({ ...prev, [activeProtocol]: { myPoints: "", totalPoints: "", myDaily: "", totalDaily: "" } }));
-    try { await storage.set("airdrop-estimator-defaults", JSON.stringify(updatedSaved)); } catch(e) {}
+    await storage.set("airdrop-estimator-defaults", JSON.stringify(updatedSaved));
+  };
+
+  const handleProtocolSwitch = (id) => {
+    setProtoState({
+      activeProtocol: id,
+      selectedDay: PROTOCOLS[id].tgeDays[1],
+      selectedFdvIdx: PROTOCOLS[id].defaultFdvIdx,
+      allocIdxByProto: DEFAULT_ALLOC_IDX,
+      activeMatrixTab: "overview",
+    });
+    setCustomDate("");
   };
 
   return (
@@ -371,24 +370,27 @@ export default function App() {
           </div>
 
           <div className="flex gap-1 bg-white/5 p-1 rounded-2xl border border-white/10">
-            {Object.values(PROTOCOLS).map(p => (
-              <button
-                key={p.id}
-                onClick={() => handleProtocolSwitch(p.id)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold transition-all ${
-                  activeProtocol === p.id ? `bg-gradient-to-r ${p.gradientFrom} ${p.gradientTo} shadow-lg` : "hover:bg-white/10 text-gray-400"
-                }`}
-              >
-                <img src={LOGOS[p.id]} className="w-5 h-5 rounded" alt="" />
-                <span>{p.name}</span>
-              </button>
-            ))}
+            {Object.keys(PROTOCOLS).map(id => {
+              const p = PROTOCOLS[id];
+              return (
+                <button
+                  key={id}
+                  onClick={() => handleProtocolSwitch(id)}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold transition-all ${
+                    activeProtocol === id ? `bg-gradient-to-r ${p.gradientFrom} ${p.gradientTo} shadow-lg` : "hover:bg-white/10 text-gray-400"
+                  }`}
+                >
+                  <img src={LOGOS[id]} className="w-5 h-5 rounded" alt="" />
+                  <span>{p.name}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
-          {/* LEFT COLUMN - Your original code */}
+          {/* LEFT COLUMN - YOUR ORIGINAL */}
           <div className={`rounded-2xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent p-4 flex flex-col gap-3`}>
 
             {/* Stats row */}
@@ -415,7 +417,7 @@ export default function App() {
               ))}
             </div>
 
-            {/* MANUAL POINTS UPDATE PANEL - your original */}
+            {/* Update panel - your original */}
             <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
               <button onClick={() => setShowEditPoints(!showEditPoints)}
                 className="w-full px-4 py-3 flex items-center justify-between text-sm text-gray-300 hover:bg-white/5 transition-colors">
@@ -427,11 +429,12 @@ export default function App() {
               </button>
               {showEditPoints && (
                 <div className="border-t border-white/10 p-3 space-y-3">
+                  {/* Saved defaults summary */}
                   {(savedDefaults[activeProtocol]?.myPoints !== null || savedDefaults[activeProtocol]?.totalPoints !== null) && (
                     <div className="bg-emerald-900/15 border border-emerald-500/20 rounded-lg px-3 py-2">
                       {savedDefaults[activeProtocol]?.savedAt && (
                         <p className="text-xs text-emerald-500">
-                          🔄 Auto-accruing since <span className="text-emerald-300 font-medium">{fmtDateShort(new Date(savedDefaults[activeProtocol].savedAt))}</span>
+                          🔄 Auto-accruing since <span className="text-emerald-300 font-medium">{new Date(savedDefaults[activeProtocol].savedAt).toLocaleDateString()}</span>
                         </p>
                       )}
                     </div>
@@ -450,7 +453,7 @@ export default function App() {
                           <input type="text"
                             value={manualPoints[activeProtocol][field]}
                             onChange={e => updateManual(field, e.target.value)}
-                            placeholder={savedDefaults[activeProtocol]?.[field] ? fmtNum(savedDefaults[activeProtocol][field]) : fmtNum(proto[field === "myPoints" ? "myPoints" : field === "totalPoints" ? "totalPoints" : field === "myDaily" ? "myDaily" : "totalDaily"])}
+                            placeholder={fmtNum(proto[field])}
                             className={`w-full bg-black/30 border rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-gray-600 outline-none focus:ring-1 transition-colors ${getOverride(field) !== null ? "border-emerald-500/50 focus:ring-emerald-500/30" : "border-white/10 focus:ring-white/20"}`}
                           />
                           {getOverride(field) !== null && (
@@ -479,7 +482,7 @@ export default function App() {
               )}
             </div>
 
-            {/* SELECTORS - your original */}
+            {/* Selectors */}
             <div className="space-y-3">
               <div>
                 <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-2">TGE Date</p>
@@ -491,25 +494,20 @@ export default function App() {
                           ? `${proto.accentBg} border-transparent text-white`
                           : "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10"
                       }`}>
-                      {proto.id === "solstice" ? fmtDateShort(addDays(TODAY, s.days)) : fmtDate(s.days, activeProtocol)}
+                      {proto.id === "solstice" ? fmtDateShort(addDays(TODAY, s.days)) : (ONRE_TGE_LABELS[s.days] || PIGGYBANK_TGE_LABELS[s.days])}
                     </button>
                   ))}
                   {customDate ? (
                     <div className={`shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-lg border text-xs font-medium ${proto.accentBg} border-transparent text-white`}>
                       <span>📅</span>
-                      <span>{(() => { const d = new Date(customDate); return `${fmtDateShort(d)} ${d.getFullYear()}`; })()}</span>
+                      <span>{new Date(customDate).toLocaleDateString()}</span>
                       <button onClick={() => setCustomDate("")} className="text-white/60 hover:text-white ml-0.5">✕</button>
                     </div>
                   ) : (
                     <label className="shrink-0 relative inline-flex items-center px-2 py-1.5 rounded-lg border text-xs font-medium bg-white/5 border-white/10 text-gray-300 hover:bg-white/10 cursor-pointer whitespace-nowrap overflow-hidden">
                       📅 Custom
-                      <input
-                        type="date"
-                        value={customDate}
-                        min={new Date().toISOString().split("T")[0]}
-                        onChange={e => setCustomDate(e.target.value)}
-                        style={{ position:"absolute", inset:0, opacity:0, width:"100%", height:"100%", cursor:"pointer", padding:0, border:"none" }}
-                      />
+                      <input type="date" value={customDate} min={new Date().toISOString().split("T")[0]} onChange={e => setCustomDate(e.target.value)}
+                        style={{ position:"absolute", inset:0, opacity:0, width:"100%", height:"100%", cursor:"pointer", padding:0, border:"none" }} />
                     </label>
                   )}
                 </div>
@@ -522,7 +520,7 @@ export default function App() {
                     <button key={f.fdv} onClick={() => setSelectedFdvIdx(i)}
                       className={`flex-1 flex items-center justify-center py-1.5 rounded-lg text-xs font-medium border transition-all whitespace-nowrap ${
                         selectedFdvIdx === i ? `${f.badgeBg} border-transparent ${f.color}` : "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10"
-                      }`} style={{minWidth:0}}>
+                      }`}>
                       {f.label}
                     </button>
                   ))}
@@ -544,7 +542,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* MAIN RESULT CARD - your original */}
+            {/* MAIN RESULT CARD */}
             {selTge && (
               <div className={`border ${selFdv.borderColor} ${selFdv.bgColor} rounded-2xl overflow-hidden flex flex-col flex-1`}>
                 <div className="p-5">
@@ -575,7 +573,7 @@ export default function App() {
 
                 <div className="grid grid-cols-2 gap-px bg-white/5 border-t border-white/10">
                   {[
-                    { label: "Pool Share", value: (selTge.share * 100).toFixed(proto.id === "piggybank" ? 3 : 5) + "%", color: proto.accentText },
+                    { label: "Pool Share", value: (selTge.share * 100).toFixed(4) + "%", color: proto.accentText },
                     { label: "Airdrop Pool", value: fmtNum(airdropPool), color: "text-cyan-300" },
                     { label: `Your ${proto.pointsLabel} @ TGE`, value: fmtNum(selTge.myP), color: "text-yellow-300" },
                     { label: "Total @ TGE", value: fmtNum(selTge.totalP), color: "text-gray-300" },
@@ -601,7 +599,7 @@ export default function App() {
             )}
           </div>
 
-          {/* RIGHT COLUMN - Tabbed Matrices */}
+          {/* RIGHT COLUMN - Tabbed */}
           <div className="lg:col-span-7 space-y-4">
 
             {/* Tabs */}
@@ -675,14 +673,12 @@ export default function App() {
 
               {activeMatrixTab === "per-million" && (
                 <div className="p-4">
-                  {/* Paste your original Value per 1M table here if you want it in the tab */}
-                  {/* For now it's left as a placeholder - you can add it if needed */}
-                  <p className="text-gray-400">Value per 1M table can be added here if desired.</p>
+                  <p className="text-gray-400 text-center py-12">Value per 1M table can be added here if you want.</p>
                 </div>
               )}
             </div>
 
-            {/* FDV Assessment - your original style */}
+            {/* FDV Assessment */}
             <div className="bg-white/4 border border-white/10 rounded-2xl p-4">
               <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-yellow-400"></span>
