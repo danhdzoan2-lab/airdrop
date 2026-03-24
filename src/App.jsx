@@ -418,7 +418,7 @@ export default function App() {
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${proto.bgGradient} text-white font-sans transition-all duration-500`}>
-      <div className="mx-auto p-3 space-y-3" style={{width:"min(85%, 1400px)", minWidth:"320px"}}>
+      <div className="mx-auto p-3 space-y-3" style={{width:"min(95%, 1400px)", minWidth:"320px"}}>
 
         {/* ── COMPACT HEADER BAR ── */}
         <div className="relative flex items-center bg-white/5 border border-white/10 rounded-2xl px-5 py-3">
@@ -445,7 +445,7 @@ export default function App() {
                   activeProtocol === p.id
                     ? `bg-gradient-to-r ${p.gradientFrom} ${p.gradientTo} text-white shadow-lg`
                     : "text-gray-400 hover:text-white hover:bg-white/5"
-                }`} style={{width:"160px"}}>
+                }`} style={{width:"clamp(100px, 160px, 30vw)"}}>
                 <div className={`w-5 h-5 rounded-md shrink-0 flex items-center justify-center overflow-hidden ${p.logoBg}`}>
                   <img src={LOGOS[p.id]} alt={p.name} className="w-full h-full object-cover" />
                 </div>
@@ -458,10 +458,10 @@ export default function App() {
 
 
         {/* ── TWO-COLUMN LAYOUT ── */}
-        <div style={{display:"grid", gridTemplateColumns:"420px 1fr", gap:"1rem", alignItems:"stretch"}}>
+        <div style={{display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(min(420px, 100%), 1fr))", gap:"1rem", alignItems:"start"}}>
 
           {/* ── LEFT COLUMN ── */}
-          <div className={`rounded-2xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent p-4 flex flex-col gap-3`} style={{height:"100%"}}>
+          <div className={`rounded-2xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent p-4 flex flex-col gap-3`}>
 
         {/* Stats row — uniform 2×2 grid */}
         <div className="grid grid-cols-2 gap-2">
@@ -599,12 +599,12 @@ export default function App() {
             <div className="flex gap-1">
               {proto.fdvScenarios.map((f, i) => (
                 <button key={f.fdv} onClick={() => setSelectedFdvIdx(i)}
-                  className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-medium border transition-all whitespace-nowrap ${
+                  className={`flex-1 flex items-center justify-center py-1.5 rounded-lg text-xs font-medium border transition-all whitespace-nowrap ${
                     selectedFdvIdx === i
                       ? `${f.badgeBg} border-transparent ${f.color}`
                       : "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10"
-                  }`}>
-                  <span>{f.icon}</span><span>{f.label}</span>
+                  }`} style={{minWidth:0}}>
+                  {f.label}
                 </button>
               ))}
             </div>
@@ -751,11 +751,11 @@ export default function App() {
             <div className="flex gap-1.5 flex-wrap">
               {tgeScenarios.map(s => (
                 <button key={s.days} onClick={() => { setSelectedDay(s.days); setCustomDate(""); }}
-                  className={`px-2 py-1 rounded text-xs border transition-all ${
+                  className={`py-1 rounded text-xs border transition-all whitespace-nowrap ${
                     !isCustomActive && selectedDay===s.days
                       ? `${proto.accentBg} border-transparent text-white`
                       : "bg-white/5 border-white/10 text-gray-400 hover:bg-white/10"
-                  }`}>
+                  }`} style={{width:"52px", textAlign:"center"}}>
                   {isSolstice ? `+${s.days}d` : fmtDate(s.days, activeProtocol)}
                 </button>
               ))}
