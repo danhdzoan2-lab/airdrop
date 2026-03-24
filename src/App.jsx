@@ -10,9 +10,9 @@ const TODAY = new Date();
 TODAY.setHours(0,0,0,0);
 
 // ─── TGE DAY OFFSETS ─────────────────────────────────────────────────────────
-const SOLSTICE_TGE_DAYS  = [7, 14, 21, 30];
+// ─── TGE DAY OFFSETS ─────────────────────────────────────────────────────────
+const SOLSTICE_TGE_DAYS = [7, 14, 21, 30];
 
-// OnRe: fixed target dates → compute offsets dynamically from TODAY
 const ONRE_TARGETS = [
   { date: "2026-06-30", label: "Q2 '26" },
   { date: "2026-09-30", label: "Q3 '26" },
@@ -20,117 +20,98 @@ const ONRE_TARGETS = [
   { date: "2027-03-31", label: "Q1 '27" },
   { date: "2027-06-30", label: "Q2 '27" },
 ];
-const ONRE_TGE_DAYS = ONRE_TARGETS.map(t => Math.round((new Date(t.date) - TODAY) / (1000*60*60*24)));
+const ONRE_TGE_DAYS = ONRE_TARGETS.map(t => Math.round((new Date(t.date) - TODAY) / 86400000));
 const ONRE_TGE_LABELS = Object.fromEntries(ONRE_TGE_DAYS.map((d, i) => [d, ONRE_TARGETS[i].label]));
 
-// Piggybank: quarter-end dates Q2 2026 → Q2 2027
-const PIGGYBANK_TARGETS = [
-  { date: "2026-06-30", label: "Q2 '26" },
-  { date: "2026-09-30", label: "Q3 '26" },
-  { date: "2026-12-31", label: "Q4 '26" },
-  { date: "2027-03-31", label: "Q1 '27" },
-  { date: "2027-06-30", label: "Q2 '27" },
-];
-const PIGGYBANK_TGE_DAYS = PIGGYBANK_TARGETS.map(t => Math.round((new Date(t.date) - TODAY) / (1000*60*60*24)));
+const PIGGYBANK_TARGETS = [...ONRE_TARGETS];
+const PIGGYBANK_TGE_DAYS = PIGGYBANK_TARGETS.map(t => Math.round((new Date(t.date) - TODAY) / 86400000));
 const PIGGYBANK_TGE_LABELS = Object.fromEntries(PIGGYBANK_TGE_DAYS.map((d, i) => [d, PIGGYBANK_TARGETS[i].label]));
 
 // ─── ALLOCATION SCENARIOS ────────────────────────────────────────────────────
 const SOLSTICE_ALLOC_SCENARIOS = [
-  { pct: 0.080, label: "8%",   tokens: "80M",  icon: "🟠", color: "text-orange-400", badgeBg: "bg-orange-900/50", note: "Lower bound — 7.5% base + minimal milestone bonus." },
-  { pct: 0.085, label: "8.5%", tokens: "85M",  icon: "🟡", color: "text-yellow-400", badgeBg: "bg-yellow-900/50", note: "Confirmed ICO allocation from the Legion launchpad sale." },
+  { pct: 0.080, label: "8%", tokens: "80M", icon: "🟠", color: "text-orange-400", badgeBg: "bg-orange-900/50", note: "Lower bound — 7.5% base + minimal milestone bonus." },
+  { pct: 0.085, label: "8.5%", tokens: "85M", icon: "🟡", color: "text-yellow-400", badgeBg: "bg-yellow-900/50", note: "Confirmed ICO allocation from the Legion launchpad sale." },
 ];
 
 const ONRE_ALLOC_SCENARIOS = [
-  { pct: 0.05, label: "5%",  tokens: "50M",  icon: "🔴", color: "text-red-400",    badgeBg: "bg-red-900/50",    note: "Very low — most allocation to team/investors. Unlikely for community-focused protocol." },
-  { pct: 0.08, label: "8%",  tokens: "80M",  icon: "🟠", color: "text-orange-400", badgeBg: "bg-orange-900/50", note: "Conservative. Typical for protocols with significant VC backing." },
-  { pct: 0.10, label: "10%", tokens: "100M", icon: "🟡", color: "text-yellow-400", badgeBg: "bg-yellow-900/50", note: "Base assumption. Common industry standard for community airdrop pools." },
-  { pct: 0.12, label: "12%", tokens: "120M", icon: "🟢", color: "text-green-400",  badgeBg: "bg-green-900/50",  note: "Generous. Suggests strong emphasis on community distribution." },
-  { pct: 0.15, label: "15%", tokens: "150M", icon: "🚀", color: "text-purple-400", badgeBg: "bg-purple-900/50", note: "Very generous. Uncommon but possible for broad distribution at launch." },
+  { pct: 0.05, label: "5%", tokens: "50M", icon: "🔴", color: "text-red-400", badgeBg: "bg-red-900/50", note: "Very low — most allocation to team/investors." },
+  { pct: 0.08, label: "8%", tokens: "80M", icon: "🟠", color: "text-orange-400", badgeBg: "bg-orange-900/50", note: "Conservative." },
+  { pct: 0.10, label: "10%", tokens: "100M", icon: "🟡", color: "text-yellow-400", badgeBg: "bg-yellow-900/50", note: "Base assumption." },
+  { pct: 0.12, label: "12%", tokens: "120M", icon: "🟢", color: "text-green-400", badgeBg: "bg-green-900/50", note: "Generous." },
+  { pct: 0.15, label: "15%", tokens: "150M", icon: "🚀", color: "text-purple-400", badgeBg: "bg-purple-900/50", note: "Very generous." },
 ];
 
 const PIGGYBANK_ALLOC_SCENARIOS = [
-  { pct: 0.05, label: "5%",  tokens: "50M",  icon: "🔴", color: "text-red-400",    badgeBg: "bg-red-900/50",    note: "Very low — minimal community share. Unlikely given the Oinks campaign prominence." },
-  { pct: 0.08, label: "8%",  tokens: "80M",  icon: "🟠", color: "text-orange-400", badgeBg: "bg-orange-900/50", note: "Conservative. Possible if team/investors retain most supply." },
-  { pct: 0.10, label: "10%", tokens: "100M", icon: "🟡", color: "text-yellow-400", badgeBg: "bg-yellow-900/50", note: "Base case. Standard community allocation for Solana xStocks protocols." },
-  { pct: 0.12, label: "12%", tokens: "120M", icon: "🟢", color: "text-green-400",  badgeBg: "bg-green-900/50",  note: "Generous. Rewards heavy Oinks farmers. Achievable given early-stage community focus." },
-  { pct: 0.15, label: "15%", tokens: "150M", icon: "🚀", color: "text-purple-400", badgeBg: "bg-purple-900/50", note: "Very generous. Maximum upside scenario — strong community-first tokenomics." },
+  { pct: 0.05, label: "5%", tokens: "50M", icon: "🔴", color: "text-red-400", badgeBg: "bg-red-900/50", note: "Very low." },
+  { pct: 0.08, label: "8%", tokens: "80M", icon: "🟠", color: "text-orange-400", badgeBg: "bg-orange-900/50", note: "Conservative." },
+  { pct: 0.10, label: "10%", tokens: "100M", icon: "🟡", color: "text-yellow-400", badgeBg: "bg-yellow-900/50", note: "Base case." },
+  { pct: 0.12, label: "12%", tokens: "120M", icon: "🟢", color: "text-green-400", badgeBg: "bg-green-900/50", note: "Generous." },
+  { pct: 0.15, label: "15%", tokens: "150M", icon: "🚀", color: "text-purple-400", badgeBg: "bg-purple-900/50", note: "Very generous." },
 ];
 
-const ALLOC_SCENARIOS    = { solstice: SOLSTICE_ALLOC_SCENARIOS, onre: ONRE_ALLOC_SCENARIOS, piggybank: PIGGYBANK_ALLOC_SCENARIOS };
-const DEFAULT_ALLOC_IDX  = { solstice: 0, onre: 2, piggybank: 2 };
+const ALLOC_SCENARIOS = { solstice: SOLSTICE_ALLOC_SCENARIOS, onre: ONRE_ALLOC_SCENARIOS, piggybank: PIGGYBANK_ALLOC_SCENARIOS };
+const DEFAULT_ALLOC_IDX = { solstice: 0, onre: 2, piggybank: 2 };
 
-// ─── PROTOCOL CONFIGS ────────────────────────────────────────────────────────
+// ─── PROTOCOL CONFIGS (your original) ────────────────────────────────────────
 const PROTOCOLS = {
   solstice: {
     id: "solstice", name: "Solstice Finance", icon: "🔥",
     tokenSymbol: "SLX", pointsLabel: "Flares",
     totalSupply: 1_000_000_000, currentTvl: 370_000_000,
-    myPoints: 438_600_000,    totalPoints: 379_100_000_000,
-    myDaily: 10_000_000,      totalDaily: 1_800_000_000,
+    myPoints: 438_600_000, totalPoints: 379_100_000_000,
+    myDaily: 10_000_000, totalDaily: 1_800_000_000,
     campaignEndDays: null,
     tgeDays: SOLSTICE_TGE_DAYS, defaultFdvIdx: 3,
-    wallets: [],
-    tokenomicsNote: "1B SLX supply · Confirmed airdrop: 7.5–8.5% · TVL $370M · TGE within ~1 month",
-    tokenomicsConfirmed: true,
     gradientFrom: "from-orange-500", gradientTo: "to-yellow-400",
     bgGradient: "from-gray-950 via-orange-950 to-gray-950",
     accentText: "text-orange-400", accentBg: "bg-orange-500", allocAccent: "bg-amber-700",
     logoBg: "bg-white",
     fdvScenarios: [
-      { fdv:  50_000_000, label: "$50M",  icon: "🐻", assessment: "Bear",    color: "text-red-400",    borderColor: "border-red-500/40",    bgColor: "bg-red-950/40",    badgeBg: "bg-red-900/50",    rationale: "Deep bear. FDV/TVL 0.14x. Only in a broad market collapse." },
-      { fdv: 100_000_000, label: "$100M", icon: "📉", assessment: "Bearish", color: "text-orange-400", borderColor: "border-orange-500/40", bgColor: "bg-orange-950/40", badgeBg: "bg-orange-900/50", rationale: "Conservative. FDV/TVL 0.27x, below $130M ICO price. Possible in a risk-off environment." },
-      { fdv: 130_000_000, label: "$130M", icon: "💰", assessment: "ICO Ref", color: "text-yellow-400", borderColor: "border-yellow-500/40", bgColor: "bg-yellow-950/40", badgeBg: "bg-yellow-900/50", rationale: "Legion launchpad ICO reference. FDV/TVL 0.35x. Floor for presale participants." },
-      { fdv: 200_000_000, label: "$200M", icon: "✅", assessment: "Base ✓",  color: "text-green-400",  borderColor: "border-green-500/40",  bgColor: "bg-green-950/40",  badgeBg: "bg-green-900/50",  rationale: "Most likely. FDV/TVL 0.54x — fair for a yield stablecoin with $370M TVL and Solana-native moat." },
-      { fdv: 300_000_000, label: "$300M", icon: "🚀", assessment: "Bull",    color: "text-purple-400", borderColor: "border-purple-500/40", bgColor: "bg-purple-950/40", badgeBg: "bg-purple-900/50", rationale: "Bull. FDV/TVL 0.81x. Achievable if TVL grows past $400M+ and Solana DeFi sentiment is strong." },
+      { fdv: 50_000_000, label: "$50M", icon: "🐻", assessment: "Bear", color: "text-red-400", borderColor: "border-red-500/40", bgColor: "bg-red-950/40", badgeBg: "bg-red-900/50", rationale: "Deep bear. FDV/TVL 0.14x." },
+      { fdv: 100_000_000, label: "$100M", icon: "📉", assessment: "Bearish", color: "text-orange-400", borderColor: "border-orange-500/40", bgColor: "bg-orange-950/40", badgeBg: "bg-orange-900/50", rationale: "Conservative." },
+      { fdv: 130_000_000, label: "$130M", icon: "💰", assessment: "ICO Ref", color: "text-yellow-400", borderColor: "border-yellow-500/40", bgColor: "bg-yellow-950/40", badgeBg: "bg-yellow-900/50", rationale: "Legion launchpad ICO reference." },
+      { fdv: 200_000_000, label: "$200M", icon: "✅", assessment: "Base ✓", color: "text-green-400", borderColor: "border-green-500/40", bgColor: "bg-green-950/40", badgeBg: "bg-green-900/50", rationale: "Most likely." },
+      { fdv: 300_000_000, label: "$300M", icon: "🚀", assessment: "Bull", color: "text-purple-400", borderColor: "border-purple-500/40", bgColor: "bg-purple-950/40", badgeBg: "bg-purple-900/50", rationale: "Bull." },
     ],
   },
   onre: {
     id: "onre", name: "OnRe Finance", icon: "🛡️",
     tokenSymbol: "ONRE", pointsLabel: "Points",
     totalSupply: 1_000_000_000, currentTvl: 128_000_000,
-    myPoints: 42_087_793,   totalPoints: 51_513_058_629,
-    myDaily: 649_593,       totalDaily: 590_232_161,
+    myPoints: 42_087_793, totalPoints: 51_513_058_629,
+    myDaily: 649_593, totalDaily: 590_232_161,
     campaignEndDays: null,
     tgeDays: ONRE_TGE_DAYS, defaultFdvIdx: 2,
-    wallets: [
-      { label: "F1YmRn... (rank #205)",  points19: 38_334_575, points18: 37_755_062 },
-      { label: "BEVQDB... (rank #1380)", points19:  3_753_218, points18:  3_683_138 },
-    ],
-    tokenomicsNote: "⚠️ Unconfirmed — assumed 1B ONRE supply · TVL ~$128M · TGE estimated Sep–Dec 2026",
-    tokenomicsConfirmed: false,
     gradientFrom: "from-blue-500", gradientTo: "to-cyan-400",
     bgGradient: "from-gray-950 via-blue-950 to-gray-950",
     accentText: "text-blue-400", accentBg: "bg-blue-600", allocAccent: "bg-cyan-700",
     logoBg: "bg-gray-800",
     fdvScenarios: [
-      { fdv:  50_000_000, label: "$50M",  icon: "🐻", assessment: "Bear",    color: "text-red-400",    borderColor: "border-red-500/40",    bgColor: "bg-red-950/40",    badgeBg: "bg-red-900/50",    rationale: "Deep bear. FDV/TVL 0.39x. Possible if launch is low-hype or broadly bearish." },
-      { fdv: 100_000_000, label: "$100M", icon: "📉", assessment: "Bearish", color: "text-orange-400", borderColor: "border-orange-500/40", bgColor: "bg-orange-950/40", badgeBg: "bg-orange-900/50", rationale: "Conservative. FDV/TVL 0.78x. Discount for unconfirmed tokenomics and nascent RWA sector." },
-      { fdv: 150_000_000, label: "$150M", icon: "✅", assessment: "Base ✓",  color: "text-green-400",  borderColor: "border-green-500/40",  bgColor: "bg-green-950/40",  badgeBg: "bg-green-900/50",  rationale: "Most likely. FDV/TVL ~1.17x. Ethena, Solana Ventures & RockawayX backing. Real yield premium." },
-      { fdv: 200_000_000, label: "$200M", icon: "📈", assessment: "Bullish", color: "text-yellow-400", borderColor: "border-yellow-500/40", bgColor: "bg-yellow-950/40", badgeBg: "bg-yellow-900/50", rationale: "Bullish. FDV/TVL 1.56x. Justified if TVL grows toward $200M+ at launch." },
-      { fdv: 300_000_000, label: "$300M", icon: "🚀", assessment: "Bull",    color: "text-purple-400", borderColor: "border-purple-500/40", bgColor: "bg-purple-950/40", badgeBg: "bg-purple-900/50", rationale: "Bull. FDV/TVL 2.34x. Needs significant TVL growth, strong RWA narrative." },
+      { fdv: 50_000_000, label: "$50M", icon: "🐻", assessment: "Bear", color: "text-red-400", borderColor: "border-red-500/40", bgColor: "bg-red-950/40", badgeBg: "bg-red-900/50", rationale: "Deep bear." },
+      { fdv: 100_000_000, label: "$100M", icon: "📉", assessment: "Bearish", color: "text-orange-400", borderColor: "border-orange-500/40", bgColor: "bg-orange-950/40", badgeBg: "bg-orange-900/50", rationale: "Conservative." },
+      { fdv: 150_000_000, label: "$150M", icon: "✅", assessment: "Base ✓", color: "text-green-400", borderColor: "border-green-500/40", bgColor: "bg-green-950/40", badgeBg: "bg-green-900/50", rationale: "Most likely." },
+      { fdv: 200_000_000, label: "$200M", icon: "📈", assessment: "Bullish", color: "text-yellow-400", borderColor: "border-yellow-500/40", bgColor: "bg-yellow-950/40", badgeBg: "bg-yellow-900/50", rationale: "Bullish." },
+      { fdv: 300_000_000, label: "$300M", icon: "🚀", assessment: "Bull", color: "text-purple-400", borderColor: "border-purple-500/40", bgColor: "bg-purple-950/40", badgeBg: "bg-purple-900/50", rationale: "Bull." },
     ],
   },
   piggybank: {
     id: "piggybank", name: "Piggybank", icon: "🐷",
     tokenSymbol: "OINK", pointsLabel: "Oinks",
     totalSupply: 1_000_000_000, currentTvl: 20_000_000,
-    myPoints: 444_765,      totalPoints: 120_000_000,
-    myDaily: 15_000,        totalDaily: 3_500_000,
+    myPoints: 444_765, totalPoints: 120_000_000,
+    myDaily: 15_000, totalDaily: 3_500_000,
     campaignEndDays: null,
     tgeDays: PIGGYBANK_TGE_DAYS, defaultFdvIdx: 2,
-    wallets: [],
-    tokenomicsNote: "⚠️ No token confirmed · Assumed 1B OINK supply · TVL ~$20M · Season 0 ends Mar 31 → Season 1 continues · TGE expected Q1 2027",
-    tokenomicsConfirmed: false,
     gradientFrom: "from-pink-500", gradientTo: "to-rose-400",
     bgGradient: "from-gray-950 via-pink-950 to-gray-950",
     accentText: "text-pink-400", accentBg: "bg-pink-600", allocAccent: "bg-rose-700",
     logoBg: "bg-transparent",
     fdvScenarios: [
-      { fdv:   5_000_000, label: "$5M",   icon: "🐻", assessment: "Bear",    color: "text-red-400",    borderColor: "border-red-500/40",    bgColor: "bg-red-950/40",    badgeBg: "bg-red-900/50",    rationale: "Deep bear. FDV/TVL 0.25x. Extremely low — only if token launch is largely ignored or market is broadly bearish." },
-      { fdv:  10_000_000, label: "$10M",  icon: "📉", assessment: "Bearish", color: "text-orange-400", borderColor: "border-orange-500/40", bgColor: "bg-orange-950/40", badgeBg: "bg-orange-900/50", rationale: "Conservative. FDV/TVL 0.5x. Modest valuation for an early-stage xStocks yield protocol with $20M TVL." },
-      { fdv:  20_000_000, label: "$20M",  icon: "✅", assessment: "Base ✓",  color: "text-green-400",  borderColor: "border-green-500/40",  bgColor: "bg-green-950/40",  badgeBg: "bg-green-900/50",  rationale: "Base case. FDV/TVL 1.0x. Fair value at launch if TVL holds at $20M — standard ratio for early Solana DeFi." },
-      { fdv:  50_000_000, label: "$50M",  icon: "📈", assessment: "Bullish", color: "text-yellow-400", borderColor: "border-yellow-500/40", bgColor: "bg-yellow-950/40", badgeBg: "bg-yellow-900/50", rationale: "Bullish. FDV/TVL 2.5x. Possible if TVL grows and xStocks/RWA narrative on Solana gains traction." },
-      { fdv: 100_000_000, label: "$100M", icon: "🚀", assessment: "Bull",    color: "text-purple-400", borderColor: "border-purple-500/40", bgColor: "bg-purple-950/40", badgeBg: "bg-purple-900/50", rationale: "Bull case. FDV/TVL 5.0x. Aggressive but achievable if Piggybank becomes the dominant xStocks yield layer on Solana." },
+      { fdv: 5_000_000, label: "$5M", icon: "🐻", assessment: "Bear", color: "text-red-400", borderColor: "border-red-500/40", bgColor: "bg-red-950/40", badgeBg: "bg-red-900/50", rationale: "Deep bear." },
+      { fdv: 10_000_000, label: "$10M", icon: "📉", assessment: "Bearish", color: "text-orange-400", borderColor: "border-orange-500/40", bgColor: "bg-orange-950/40", badgeBg: "bg-orange-900/50", rationale: "Conservative." },
+      { fdv: 20_000_000, label: "$20M", icon: "✅", assessment: "Base ✓", color: "text-green-400", borderColor: "border-green-500/40", bgColor: "bg-green-950/40", badgeBg: "bg-green-900/50", rationale: "Base case." },
+      { fdv: 50_000_000, label: "$50M", icon: "📈", assessment: "Bullish", color: "text-yellow-400", borderColor: "border-yellow-500/40", bgColor: "bg-yellow-950/40", badgeBg: "bg-yellow-900/50", rationale: "Bullish." },
+      { fdv: 100_000_000, label: "$100M", icon: "🚀", assessment: "Bull", color: "text-purple-400", borderColor: "border-purple-500/40", bgColor: "bg-purple-950/40", badgeBg: "bg-purple-900/50", rationale: "Bull case." },
     ],
   },
 };
@@ -161,25 +142,12 @@ function fmtNum(n) {
   return n.toFixed(0);
 }
 
-// Storage abstraction
+// Storage
 const storage = {
   async get(key) {
-    try {
-      if (window.storage?.get) {
-        const r = await window.storage.get(key);
-        return r?.value ?? null;
-      }
-    } catch(e) {}
-    try { return localStorage.getItem(key); } catch(e) {}
-    return null;
+    try { return localStorage.getItem(key); } catch(e) { return null; }
   },
   async set(key, value) {
-    try {
-      if (window.storage?.set) {
-        await window.storage.set(key, value);
-        return;
-      }
-    } catch(e) {}
     try { localStorage.setItem(key, value); } catch(e) {}
   },
 };
@@ -228,7 +196,7 @@ function MatrixTable({ title, rows, columns, getValue, selectedRow, selectedCol,
   );
 }
 
-// ─── APP ─────────────────────────────────────────────────────────────────────
+// ─── MAIN APP ────────────────────────────────────────────────────────────────
 export default function App() {
   const [protoState, setProtoState] = useState({
     activeProtocol: "solstice",
@@ -334,7 +302,7 @@ export default function App() {
   const fdvGrid = useMemo(() =>
     tgeScenarios.map(tge =>
       proto.fdvScenarios.map(f => tge.tokens * (f.fdv / proto.totalSupply))
-    ), [tgeScenarios, activeProtocol]);
+    ), [tgeScenarios]);
 
   const allocFdvGrid = useMemo(() => {
     const myP = effectiveMyPoints + effectiveMyDaily * Math.max(0, effectiveDay);
@@ -472,7 +440,7 @@ export default function App() {
               ))}
             </div>
 
-            {/* MANUAL POINTS UPDATE PANEL - your original */}
+            {/* MANUAL POINTS UPDATE PANEL */}
             <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
               <button onClick={() => setShowEditPoints(!showEditPoints)}
                 className="w-full px-4 py-3 flex items-center justify-between text-sm text-gray-300 hover:bg-white/5 transition-colors">
@@ -536,7 +504,7 @@ export default function App() {
               )}
             </div>
 
-            {/* SELECTORS - your original */}
+            {/* SELECTORS */}
             <div className="space-y-3">
               <div>
                 <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-2">TGE Date</p>
@@ -548,10 +516,7 @@ export default function App() {
                           ? `${proto.accentBg} border-transparent text-white`
                           : "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10"
                       }`}>
-                      {isSolstice
-                        ? fmtDateShort(addDays(TODAY, s.days))
-                        : fmtDate(s.days, activeProtocol)
-                      }
+                      {isSolstice ? fmtDateShort(addDays(TODAY, s.days)) : fmtDate(s.days, activeProtocol)}
                     </button>
                   ))}
                   {customDate ? (
@@ -582,7 +547,7 @@ export default function App() {
                     <button key={f.fdv} onClick={() => setSelectedFdvIdx(i)}
                       className={`flex-1 flex items-center justify-center py-1.5 rounded-lg text-xs font-medium border transition-all whitespace-nowrap ${
                         selectedFdvIdx === i ? `${f.badgeBg} border-transparent ${f.color}` : "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10"
-                      }`} style={{minWidth:0}}>
+                      }`}>
                       {f.label}
                     </button>
                   ))}
@@ -604,7 +569,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* MAIN RESULT CARD - your original */}
+            {/* MAIN RESULT CARD */}
             {selTge && (
               <div className={`border ${selFdv.borderColor} ${selFdv.bgColor} rounded-2xl overflow-hidden flex flex-col flex-1`}>
                 <div className="p-5">
