@@ -421,7 +421,7 @@ export default function App() {
       <div className="mx-auto p-3 space-y-3" style={{width:"min(95%, 1400px)", minWidth:"320px"}}>
 
         {/* ── COMPACT HEADER BAR ── */}
-        <div className="relative flex items-center bg-white/5 border border-white/10 rounded-2xl px-5 py-3">
+        <div className="flex flex-wrap items-center gap-3 bg-white/5 border border-white/10 rounded-2xl px-4 py-3">
           {/* Logo / Title — left */}
           <div className="shrink-0">
             <div className="flex items-center gap-2.5">
@@ -437,19 +437,19 @@ export default function App() {
             </div>
           </div>
 
-          {/* Protocol Switcher — absolutely centered */}
-          <div className="absolute left-1/2 -translate-x-1/2 flex gap-1.5 p-1 bg-white/5 border border-white/10 rounded-xl">
+          {/* Protocol Switcher — centered on desktop, full width row on mobile */}
+          <div className="flex gap-1.5 p-1 bg-white/5 border border-white/10 rounded-xl mx-auto">
             {Object.values(PROTOCOLS).map(p => (
               <button key={p.id} onClick={() => handleProtocolSwitch(p.id)}
-                className={`flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
+                className={`flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-semibold transition-colors duration-150 ${
                   activeProtocol === p.id
                     ? `bg-gradient-to-r ${p.gradientFrom} ${p.gradientTo} text-white shadow-lg`
                     : "text-gray-400 hover:text-white hover:bg-white/5"
-                }`} style={{width:"clamp(100px, 160px, 30vw)"}}>
+                }`} style={{width:"clamp(90px, 140px, 28vw)"}}>
                 <div className={`w-5 h-5 rounded-md shrink-0 flex items-center justify-center overflow-hidden ${p.logoBg}`}>
                   <img src={LOGOS[p.id]} alt={p.name} className="w-full h-full object-cover" />
                 </div>
-                <span>{p.name}</span>
+                <span className="truncate">{p.name}</span>
               </button>
             ))}
           </div>
@@ -599,7 +599,7 @@ export default function App() {
             <div className="flex gap-1">
               {proto.fdvScenarios.map((f, i) => (
                 <button key={f.fdv} onClick={() => setSelectedFdvIdx(i)}
-                  className={`flex-1 flex items-center justify-center py-1.5 rounded-lg text-xs font-medium border transition-all whitespace-nowrap ${
+                  className={`flex-1 flex items-center justify-center py-1.5 rounded-lg text-xs font-medium border whitespace-nowrap ${
                     selectedFdvIdx === i
                       ? `${f.badgeBg} border-transparent ${f.color}`
                       : "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10"
@@ -615,11 +615,11 @@ export default function App() {
             <div className="flex flex-wrap gap-1">
               {allocList.map((a, i) => (
                 <button key={a.label} onClick={() => setSelectedAllocIdx(i)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                  className={`py-1.5 rounded-lg text-xs font-medium border ${
                     selectedAllocIdx === i
                       ? `${proto.allocAccent} border-transparent text-white`
                       : "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10"
-                  }`}>
+                  }`} style={{minWidth:"52px", textAlign:"center"}}>
                   {a.icon} {a.label}
                 </button>
               ))}
