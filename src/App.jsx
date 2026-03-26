@@ -19,7 +19,6 @@ const ONRE_TARGETS = [
   { date: "2026-09-30", label: "Q3 '26" },
   { date: "2026-12-31", label: "Q4 '26" },
   { date: "2027-03-31", label: "Q1 '27" },
-  { date: "2027-06-30", label: "Q2 '27" },
 ];
 const ONRE_TGE_DAYS = ONRE_TARGETS.map(t => Math.round((new Date(t.date) - TODAY) / (1000*60*60*24)));
 const ONRE_TGE_LABELS = Object.fromEntries(ONRE_TGE_DAYS.map((d, i) => [d, ONRE_TARGETS[i].label]));
@@ -30,7 +29,6 @@ const PIGGYBANK_TARGETS = [
   { date: "2026-09-30", label: "Q3 '26" },
   { date: "2026-12-31", label: "Q4 '26" },
   { date: "2027-03-31", label: "Q1 '27" },
-  { date: "2027-06-30", label: "Q2 '27" },
 ];
 const PIGGYBANK_TGE_DAYS = PIGGYBANK_TARGETS.map(t => Math.round((new Date(t.date) - TODAY) / (1000*60*60*24)));
 const PIGGYBANK_TGE_LABELS = Object.fromEntries(PIGGYBANK_TGE_DAYS.map((d, i) => [d, PIGGYBANK_TARGETS[i].label]));
@@ -437,19 +435,19 @@ export default function App() {
             </div>
           </div>
 
-          {/* Protocol Switcher — centered on desktop, full width row on mobile */}
-          <div className="flex gap-1.5 p-1 bg-white/5 border border-white/10 rounded-xl mx-auto">
+          {/* Protocol Switcher */}
+          <div className="flex gap-1 p-1 bg-white/5 border border-white/10 rounded-xl mx-auto">
             {Object.values(PROTOCOLS).map(p => (
               <button key={p.id} onClick={() => handleProtocolSwitch(p.id)}
-                className={`flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-semibold transition-colors duration-150 ${
+                className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-colors duration-150 whitespace-nowrap ${
                   activeProtocol === p.id
                     ? `bg-gradient-to-r ${p.gradientFrom} ${p.gradientTo} text-white shadow-lg`
                     : "text-gray-400 hover:text-white hover:bg-white/5"
-                }`} style={{width:"clamp(90px, 140px, 28vw)"}}>
-                <div className={`w-5 h-5 rounded-md shrink-0 flex items-center justify-center overflow-hidden ${p.logoBg}`}>
+                }`}>
+                <div className={`w-4 h-4 rounded-sm shrink-0 flex items-center justify-center overflow-hidden ${p.logoBg}`}>
                   <img src={LOGOS[p.id]} alt={p.name} className="w-full h-full object-cover" />
                 </div>
-                <span className="truncate">{p.name}</span>
+                <span>{p.id === "solstice" ? "Solstice" : p.id === "onre" ? "OnRe" : "Piggybank"}</span>
               </button>
             ))}
           </div>
